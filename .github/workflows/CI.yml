@@ -67,6 +67,7 @@ jobs:
 
     - name: Install dependencies
       uses: mamba-org/provision-with-micromamba@main
+      if: ${{ matrix.build == 'fpm' || 'meson' }}
       with:
         environment-file: config/ci/${{ matrix.build }}-env.yaml
         extra-specs: |
