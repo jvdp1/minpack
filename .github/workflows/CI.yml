@@ -25,6 +25,7 @@ jobs:
       CC: gcc
       FPM_FC: gfortran
       FPM_CC: gcc
+      BUILD_DIR: ${{ matrix.build == 'cmake' && 'build' || '.' }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -71,15 +72,20 @@ jobs:
         extra-specs: |
           ${{ matrix.build-type == 'coverage' && 'gcovr' || '' }}
 
+    - name: Configure (cmake)
+      if: ${{ matrix.build == 'cmake' }}
+      run: >-
+        cmake -Wdev
+        -DCMAKE_INSTALL_PREFIX=$PWD/_dist
+        -S . -B ${{ env.BUILD_DIR }}
+
     - name: Compile (cmake)
       if: ${{ matrix.build == 'cmake' }}
-      run: |
-        cmake -B build
-        cmake --build build
+        cmake --build ${{ env.BUILD_DIR }} --parallel
 
     - name: Run test (cmake)
       if: ${{ matrix.build == 'cmake' }}
-      run: cmake --build build --target test
+      run: cmake --build ${{ env.BUILD_DIR }} --target test
 
     - name: Compile (fpm)
       if: ${{ matrix.build == 'fpm' }}
