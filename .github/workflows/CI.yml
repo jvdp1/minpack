@@ -81,7 +81,7 @@ jobs:
 
     - name: Compile (cmake)
       if: ${{ matrix.build == 'cmake' }}
-     run: cmake --build ${{ env.BUILD_DIR }} --parallel
+      run: cmake --build ${{ env.BUILD_DIR }} --parallel
 
     - name: Run test (cmake)
       if: ${{ matrix.build == 'cmake' }}
