@@ -13,33 +13,6 @@ endif()
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" PARENT_SCOPE)
 
-# Check for available features
-# Note: users can overwrite the automatic check by setting the value at configure time
-include(CheckFortranSourceRuns)
-if (NOT DEFINED WITH_CBOOL)
-  check_fortran_source_runs(
-    "use, intrinsic :: iso_c_binding, only: c_bool; integer, parameter :: lk = kind(.true.)
-     if (c_bool == lk) stop 1
-     end"
-    WITH_CBOOL
-  )
-  set(WITH_CBOOL ${WITH_CBOOL} PARENT_SCOPE)
-endif()
-if (NOT DEFINED WITH_QP)
-  check_fortran_source_runs(
-    "if (selected_real_kind(33) == -1) stop 1; end"
-    WITH_QP
-  )
-  set(WITH_QP ${WITH_QP} PARENT_SCOPE)
-endif()
-if (NOT DEFINED WITH_XDP)
-  check_fortran_source_runs(
-    "if (any(selected_real_kind(18) == [-1, selected_real_kind(33)])) stop 1; end"
-    WITH_XDP
-  )
-  set(WITH_XDP ${WITH_XDP} PARENT_SCOPE)
-endif()
-
 # Export a pkg-config file
 configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/template.pc"
